@@ -37,7 +37,14 @@ const api = new Hono()
   });
 
 const app = new Hono()
-  .use("*", cors())
+  .use(
+    "*",
+    cors({
+      origin: ["https://ophelia-birthday.netlify.app", "http://localhost:5173"],
+      allowMethods: ["GET", "POST", "OPTIONS"],
+      allowHeaders: ["Content-Type"],
+    }),
+  )
   .get("/", (c) => {
     return c.text("Ophelia's Birthday API 🎉");
   })
