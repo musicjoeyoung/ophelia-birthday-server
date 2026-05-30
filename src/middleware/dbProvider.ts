@@ -5,6 +5,7 @@ import { createMiddleware } from "hono/factory";
 export const dbProvider = createMiddleware<{
   Bindings: {
     DATABASE_URL: string;
+    RESEND_API_KEY: string;
   };
   Variables: {
     db: NeonHttpDatabase;
