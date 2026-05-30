@@ -6,6 +6,7 @@ export const dbProvider = createMiddleware<{
   Bindings: {
     DATABASE_URL: string;
     RESEND_API_KEY: string;
+    ADMIN_PASSWORD: string;
   };
   Variables: {
     db: NeonHttpDatabase;

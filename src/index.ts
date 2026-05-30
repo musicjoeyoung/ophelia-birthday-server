@@ -9,6 +9,7 @@ import { cors } from "hono/cors";
 import { dbProvider } from "./middleware/dbProvider";
 import { zodValidator } from "./middleware/validator";
 
+// ── Public RSVP routes ────────────────────────────────────────────────────────
 const api = new Hono()
   .use("*", dbProvider)
   .post("/rsvp", zodValidator("json", ZRsvpInsert), async (c) => {
@@ -64,19 +65,82 @@ const api = new Hono()
     }
   });
 
+// ── Admin routes ──────────────────────────────────────────────────────────────
+type AdminBindings = { ADMIN_PASSWORD: string; RESEND_API_KEY: string; DATABASE_URL: string };
+
+const admin = new Hono<{ Bindings: AdminBindings }>()
+  .use("*", dbProvider)
+  // Login — validate password, return it as the bearer token
+  .post("/login", async (c) => {
+    const { password } = await c.req.json<{ password?: string }>();
+    if (!password || password !== c.env.ADMIN_PASSWORD) {
+      return c.json({ message: "Invalid password" }, 401);
+    }
+    return c.json({ token: c.env.ADMIN_PASSWORD });
+  })
+  // All routes below require a valid token
+  .use("*", async (c, next) => {
+    const auth = c.req.header("Authorization");
+    if (!auth || auth !== `Bearer ${c.env.ADMIN_PASSWORD}`) {
+      return c.json({ message: "Unauthorized" }, 401);
+    }
+    await next();
+  })
+  .get("/rsvps", async (c) => {
+    const db = c.var.db;
+    const rows = await db
+      .select()
+      .from(schema.rsvps)
+      .orderBy(schema.rsvps.createdAt);
+    return c.json(rows);
+  })
+  .post("/send-email", async (c) => {
+    const { emails, subject, html } = await c.req.json<{
+      emails: string[];
+      subject: string;
+      html: string;
+    }>();
+
+    if (!emails?.length || !subject?.trim() || !html?.trim()) {
+      return c.json({ message: "emails, subject, and html are required" }, 400);
+    }
+
+    const results: { email: string; ok: boolean }[] = [];
+    for (const to of emails) {
+      const res = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${c.env.RESEND_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          from: "Ophelia's Birthday <rsvp@ophelia-birthday.com>",
+          to,
+          subject,
+          html,
+        }),
+      });
+      results.push({ email: to, ok: res.ok });
+    }
+
+    const failed = results.filter((r) => !r.ok).map((r) => r.email);
+    return c.json({ sent: results.length - failed.length, failed });
+  });
+
 const app = new Hono()
   .use(
     "*",
     cors({
       origin: ["https://ophelia-birthday.com", "https://www.ophelia-birthday.com", "https://ophelia-birthday.netlify.app", "http://localhost:5173"],
       allowMethods: ["GET", "POST", "OPTIONS"],
-      allowHeaders: ["Content-Type"],
+      allowHeaders: ["Content-Type", "Authorization"],
     }),
   )
   .get("/", (c) => {
     return c.text("Ophelia's Birthday API 🎉");
   })
-  .route("/api", api);
+  .route("/api", api)
+  .route("/api/admin", admin);
 
 app.onError((error, c) => {
   console.error(error);
