@@ -21,9 +21,12 @@ export const rsvps = pgTable(
   {
     id: serial().primaryKey(),
     childName: text().notNull(),
+    childName2: text(),
     adultName: text().notNull(),
+    adultName2: text(),
     email: text().notNull(),
     attending: boolean().notNull(),
+    message: text(),
     createdAt: timestamp().defaultNow().notNull(),
   },
   (table) => [uniqueIndex("rsvpEmailUniqueIndex").on(lower(table.email))],

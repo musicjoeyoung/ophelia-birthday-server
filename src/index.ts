@@ -14,16 +14,19 @@ const api = new Hono()
   .use("*", dbProvider)
   .post("/rsvp", zodValidator("json", ZRsvpInsert), async (c) => {
     const db = c.var.db;
-    const { child_name, adult_name, email, attending } = c.req.valid("json");
+    const { child_name, child_name_2, adult_name, adult_name_2, email, attending, message } = c.req.valid("json");
 
     try {
       const [rsvp] = await db
         .insert(schema.rsvps)
         .values({
           childName: child_name,
+          childName2: child_name_2 ?? null,
           adultName: adult_name,
+          adultName2: adult_name_2 ?? null,
           email: email.toLowerCase(),
           attending,
+          message: message ?? null,
         })
         .returning();
 
