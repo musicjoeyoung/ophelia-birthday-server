@@ -1,0 +1,37 @@
+{
+  "name": "hono-neon-drizzle-template",
+  "scripts": {
+    "dev": "wrangler dev src/index.ts",
+    "deploy": "wrangler deploy --minify src/index.ts",
+    "cf-typegen": "wrangler types --env-interface CloudflareBindings",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:migrate:prod": "ENVIRONMENT=production drizzle-kit migrate",
+    "db:seed": "tsx seed.ts",
+    "db:seed:prod": "ENVIRONMENT=production tsx seed.ts",
+    "db:setup": "npm run db:generate && npm run db:migrate && npm run db:seed",
+    "db:studio": "drizzle-kit studio",
+    "format": "biome format --write src",
+    "lint": "biome check --write src",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "@fiberplane/hono": "0.5.2",
+    "@neondatabase/serverless": "^0.10.4",
+    "dotenv": "^16.4.7",
+    "drizzle-orm": "^0.43.1",
+    "drizzle-zod": "^0.8.1",
+    "hono": "^4.7.0",
+    "zod": "^4.1.11"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.9.4",
+    "@cloudflare/vitest-pool-workers": "^0.8.31",
+    "@cloudflare/workers-types": "^4.20250508.0",
+    "drizzle-kit": "^0.31.1",
+    "drizzle-seed": "^0.3.1",
+    "tsx": "^4.19.2",
+    "vitest": "^3.1.4",
+    "wrangler": "^4.4.0"
+  }
+}
