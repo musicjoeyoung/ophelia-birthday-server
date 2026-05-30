@@ -22,7 +22,7 @@ const api = new Hono()
         .values({
           childName: child_name,
           childName2: child_name_2 ?? null,
-          adultName: adult_name,
+          adultName: adult_name ?? '',
           adultName2: adult_name_2 ?? null,
           email: email.toLowerCase(),
           attending,
