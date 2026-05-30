@@ -47,7 +47,7 @@ const api = new Hono()
                 <p style="font-size: 1.1rem; color: #555;">Hi ${adult_name_2 ? `${adult_name} & ${adult_name_2}` : adult_name},</p>
                 <p style="color: #555;">We're so excited to celebrate Ophelia's 5th birthday with you and ${child_name}!</p>
                 <div style="background: #fdf3e7; border-radius: 12px; padding: 1rem 1.25rem; margin: 1.5rem 0; color: #333;">
-                  <p><strong>🕚 Time:</strong> 11:00 am – 1:00 PM</p>
+                  <p><strong>🕚 Time:</strong> 11:00 am – 1:00 pm</p>
                   <p><strong>📍 Where:</strong> Little Pulp, 8016 Cooper Avenue, Glendale, NY 11385</p>
                 </div>
                 <p style="color: #555;">Can't wait to see you there!</p>
