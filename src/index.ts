@@ -7,6 +7,7 @@ import { Hono } from "hono";
 import { ZRsvpInsert } from "./dtos";
 import { cors } from "hono/cors";
 import { dbProvider } from "./middleware/dbProvider";
+import { sql } from "drizzle-orm";
 import { zodValidator } from "./middleware/validator";
 
 // ── Public RSVP routes ────────────────────────────────────────────────────────
@@ -56,6 +57,7 @@ const api = new Hono()
                 </div>
                 <p style="color: #555;">Can't wait to see you there!</p>
                 <p style="color: #c13b6c; font-weight: bold;">With love, Ophelia's family 💕</p>
+                <p style="margin-top: 1.5rem; font-size: 0.8rem; color: #aaa;">Need to make a change? <a href="https://ophelia-birthday.com/?update=true" style="color: #c13b6c;">Update your RSVP</a></p>
               </div>
             `,
           }),
@@ -76,6 +78,7 @@ const api = new Hono()
                 <p style="font-size: 1.1rem; color: #555;">Hi ${greeting},</p>
                 <p style="color: #555;">Thanks for letting us know that you can't make it. We'll miss you and hope to see you again soon!</p>
                 <p style="color: #c13b6c; font-weight: bold;">— Joe &amp; Carly</p>
+                <p style="margin-top: 1.5rem; font-size: 0.8rem; color: #aaa;">Need to make a change? <a href="https://ophelia-birthday.com/?update=true" style="color: #c13b6c;">Update your RSVP</a></p>
               </div>
             `,
           }),
@@ -86,10 +89,87 @@ const api = new Hono()
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "";
       if (msg.includes("unique") || msg.includes("duplicate")) {
-        return c.json({ message: "You've already RSVP'd with that email!" }, 409);
+        return c.json({ message: "You've already RSVP'd with that email!", code: "duplicate" }, 409);
       }
       throw err;
     }
+  })
+  .put("/rsvp", zodValidator("json", ZRsvpInsert), async (c) => {
+    const db = c.var.db;
+    const { child_name, child_name_2, adult_name, adult_name_2, email, attending, message } = c.req.valid("json");
+
+    const [rsvp] = await db
+      .update(schema.rsvps)
+      .set({
+        childName: child_name,
+        childName2: child_name_2 ?? null,
+        adultName: adult_name ?? '',
+        adultName2: adult_name_2 ?? null,
+        attending,
+        message: message ?? null,
+      })
+      .where(sql`lower(${schema.rsvps.email}) = ${email.toLowerCase()}`)
+      .returning();
+
+    if (!rsvp) {
+      return c.json({ message: "No RSVP found for that email." }, 404);
+    }
+
+    const greeting = adult_name
+      ? adult_name_2 ? `${adult_name} & ${adult_name_2}` : adult_name
+      : child_name;
+
+    if (attending) {
+      await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${c.env.RESEND_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          from: "Ophelia's Birthday <rsvp@ophelia-birthday.com>",
+          to: email,
+          subject: "Your RSVP has been updated! 🎉",
+          html: `
+            <div style="font-family: sans-serif; max-width: 520px; margin: 0 auto; color: #c13b6c;">
+              <h1 style="font-size: 1.8rem; margin-bottom: 0.5rem;">You're coming! 🌈</h1>
+              <p style="font-size: 1.1rem; color: #555;">Hi ${greeting},</p>
+              <p style="color: #555;">We've updated your RSVP — we're so excited to celebrate Ophelia's 5th birthday with you and ${child_name}!</p>
+              <div style="background: #fdf3e7; border-radius: 12px; padding: 1rem 1.25rem; margin: 1.5rem 0; color: #333;">
+                <p><strong>🕚 Time:</strong> 11:00 am – 1:00 pm</p>
+                <p><strong>📍 Where:</strong> Little Pulp, 80-16 Cooper Avenue, Glendale, NY 11385</p>
+              </div>
+              <p style="color: #555;">Can't wait to see you there!</p>
+              <p style="color: #c13b6c; font-weight: bold;">With love, Ophelia's family 💕</p>
+              <p style="margin-top: 1.5rem; font-size: 0.8rem; color: #aaa;">Need to make a change? <a href="https://ophelia-birthday.com/?update=true" style="color: #c13b6c;">Update your RSVP</a></p>
+            </div>
+          `,
+        }),
+      });
+    } else {
+      await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${c.env.RESEND_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          from: "Ophelia's Birthday <rsvp@ophelia-birthday.com>",
+          to: email,
+          subject: "Your RSVP has been updated 💕",
+          html: `
+            <div style="font-family: sans-serif; max-width: 520px; margin: 0 auto; color: #c13b6c;">
+              <p style="font-size: 1.1rem; color: #555;">Hi ${greeting},</p>
+              <p style="color: #555;">We've updated your RSVP. Thanks for letting us know — we'll miss you and hope to see you again soon!</p>
+              <p style="color: #c13b6c; font-weight: bold;">— Joe &amp; Carly</p>
+              <p style="margin-top: 1.5rem; font-size: 0.8rem; color: #aaa;">Need to make a change? <a href="https://ophelia-birthday.com/?update=true" style="color: #c13b6c;">Update your RSVP</a></p>
+            </div>
+          `,
+        }),
+      });
+    }
+
+    return c.json({ success: true, id: rsvp.id }, 200);
   });
 
 // ── Admin routes ──────────────────────────────────────────────────────────────
@@ -159,7 +239,7 @@ const app = new Hono()
     "*",
     cors({
       origin: ["https://ophelia-birthday.com", "https://www.ophelia-birthday.com", "https://ophelia-birthday.netlify.app", "http://localhost:5173"],
-      allowMethods: ["GET", "POST", "OPTIONS"],
+      allowMethods: ["GET", "POST", "PUT", "OPTIONS"],
       allowHeaders: ["Content-Type", "Authorization"],
     }),
   )
