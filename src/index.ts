@@ -30,6 +30,10 @@ const api = new Hono()
         })
         .returning();
 
+      const greeting = adult_name
+        ? adult_name_2 ? `${adult_name} & ${adult_name_2}` : adult_name
+        : child_name;
+
       if (attending) {
         await fetch("https://api.resend.com/emails", {
           method: "POST",
@@ -44,14 +48,34 @@ const api = new Hono()
             html: `
               <div style="font-family: sans-serif; max-width: 520px; margin: 0 auto; color: #c13b6c;">
                 <h1 style="font-size: 1.8rem; margin-bottom: 0.5rem;">You're coming! 🌈</h1>
-                <p style="font-size: 1.1rem; color: #555;">Hi ${adult_name_2 ? `${adult_name} & ${adult_name_2}` : adult_name},</p>
+                <p style="font-size: 1.1rem; color: #555;">Hi ${greeting},</p>
                 <p style="color: #555;">We're so excited to celebrate Ophelia's 5th birthday with you and ${child_name}!</p>
                 <div style="background: #fdf3e7; border-radius: 12px; padding: 1rem 1.25rem; margin: 1.5rem 0; color: #333;">
                   <p><strong>🕚 Time:</strong> 11:00 am – 1:00 pm</p>
-                  <p><strong>📍 Where:</strong> Little Pulp, 8016 Cooper Avenue, Glendale, NY 11385</p>
+                  <p><strong>📍 Where:</strong> Little Pulp, 80-16 Cooper Avenue, Glendale, NY 11385</p>
                 </div>
                 <p style="color: #555;">Can't wait to see you there!</p>
                 <p style="color: #c13b6c; font-weight: bold;">With love, Ophelia's family 💕</p>
+              </div>
+            `,
+          }),
+        });
+      } else {
+        await fetch("https://api.resend.com/emails", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${c.env.RESEND_API_KEY}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            from: "Ophelia's Birthday <rsvp@ophelia-birthday.com>",
+            to: email,
+            subject: "We'll miss you! 💕",
+            html: `
+              <div style="font-family: sans-serif; max-width: 520px; margin: 0 auto; color: #c13b6c;">
+                <p style="font-size: 1.1rem; color: #555;">Hi ${greeting},</p>
+                <p style="color: #555;">Thanks for letting us know that you can't make it. We'll miss you and hope to see you again soon!</p>
+                <p style="color: #c13b6c; font-weight: bold;">— Joe &amp; Carly</p>
               </div>
             `,
           }),
