@@ -51,13 +51,14 @@ const api = new Hono()
                 <h1 style="font-size: 1.8rem; margin-bottom: 0.5rem;">You're coming! 🌈</h1>
                 <p style="font-size: 1.1rem; color: #555;">Hi ${greeting},</p>
                 <p style="color: #555;">We're so excited to celebrate Ophelia's 5th birthday with you and ${child_name_2 ? `${child_name} & ${child_name_2}` : child_name}!</p>
-                <div style="background: #fdf3e7; border-radius: 12px; padding: 1rem 1.25rem; margin: 1.5rem 0; color: #333;">
+                <div style="background: #ecc8d0; border-radius: 12px; padding: 1rem 1.25rem; margin: 1.5rem 0; color: #333;">
+                <p><strong>🎂 What:</strong> Ophelia's 5th Birthday Party!</p>
                 <p><strong>📍 Where:</strong> Little Pulp, 80-16 Cooper Avenue, Glendale, NY 11385</p>
-                <p><strong>🕚 When:</strong> Sunday, July 12 - 11:00 am – 1:00 pm</p>
+                <p><strong>🕚 When:</strong> Sunday, July 12th, 11:00am – 1:00pm</p>
+                <p>Please check the <a href="https://ophelia-birthday.com" style="color: #c13b6c;">website</a> for more party details.</p>
                 </div>
                 <p style="color: #555;">Can't wait to see you there!</p>
                 <p style="color: #c13b6c; font-weight: bold;">With love, Ophelia's family 💕</p>
-                <p style="color: #555;">Please check the <a href="https://ophelia-birthday.com" style="color: #c13b6c;">website</a> for more party details.</p>
                 <p style="margin-top: 1.5rem; font-size: 0.8rem; color: #aaa;">Need to make a change? <a href="https://ophelia-birthday.com/?update=true" style="color: #c13b6c;">Update your RSVP</a></p>
               </div>
             `,
@@ -137,9 +138,11 @@ const api = new Hono()
               <h1 style="font-size: 1.8rem; margin-bottom: 0.5rem;">You're coming! 🌈</h1>
               <p style="font-size: 1.1rem; color: #555;">Hi ${greeting},</p>
               <p style="color: #555;">We've updated your RSVP — we're so excited to celebrate Ophelia's 5th birthday with you and ${child_name_2 ? `${child_name} & ${child_name_2}` : child_name}!</p>
-              <div style="background: #fdf3e7; border-radius: 12px; padding: 1rem 1.25rem; margin: 1.5rem 0; color: #333;">
-              <p><strong>📍 Where:</strong> Little Pulp, 80-16 Cooper Avenue, Glendale, NY 11385</p>
-              <p><strong>🕚 When:</strong> Sunday, July 12 - 11:00 am – 1:00 pm</p>
+              <div style="background: #ecc8d0; border-radius: 12px; padding: 1rem 1.25rem; margin: 1.5rem 0; color: #333;">
+                <p><strong>🎂 What:</strong> Ophelia's 5th Birthday Party!</p>
+                <p><strong>📍 Where:</strong> Little Pulp, 80-16 Cooper Avenue, Glendale, NY 11385</p>
+                <p><strong>🕚 When:</strong> Sunday, July 12th, 11:00am – 1:00pm</p>
+                <p>Please check the <a href="https://ophelia-birthday.com" style="color: #c13b6c;">website</a> for more party details.</p>
               </div>
               <p style="color: #555;">Can't wait to see you there!</p>
               <p style="color: #c13b6c; font-weight: bold;">With love, Ophelia's family 💕</p>
