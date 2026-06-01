@@ -90,6 +90,29 @@ const api = new Hono()
         });
       }
 
+      // Admin notification
+      await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${c.env.RESEND_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          from: "Ophelia's Birthday <rsvp@ophelia-birthday.com>",
+          to: "musicjoeyoung@gmail.com",
+          subject: `New RSVP: ${attending ? '✅ YES' : '❌ NO'} — ${child_name}${child_name_2 ? ` & ${child_name_2}` : ''}`,
+          html: `
+            <div style="font-family: sans-serif; color: #333;">
+              <p><strong>Status:</strong> ${attending ? '✅ Attending' : '❌ Not attending'}</p>
+              <p><strong>Child:</strong> ${child_name}${child_name_2 ? `, ${child_name_2}` : ''}</p>
+              ${adult_name ? `<p><strong>Adult:</strong> ${adult_name}${adult_name_2 ? `, ${adult_name_2}` : ''}</p>` : ''}
+              <p><strong>Email:</strong> ${email}</p>
+              ${message ? `<p><strong>Message:</strong> ${message}</p>` : ''}
+            </div>
+          `,
+        }),
+      });
+
       return c.json({ success: true, id: rsvp.id }, 201);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "";
@@ -177,6 +200,29 @@ const api = new Hono()
         }),
       });
     }
+
+    // Admin notification
+    await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${c.env.RESEND_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: "Ophelia's Birthday <rsvp@ophelia-birthday.com>",
+        to: "musicjoeyoung@gmail.com",
+        subject: `Updated RSVP: ${attending ? '✅ YES' : '❌ NO'} — ${child_name}${child_name_2 ? ` & ${child_name_2}` : ''}`,
+        html: `
+          <div style="font-family: sans-serif; color: #333;">
+            <p><strong>Status:</strong> ${attending ? '✅ Attending' : '❌ Not attending'} (updated)</p>
+            <p><strong>Child:</strong> ${child_name}${child_name_2 ? `, ${child_name_2}` : ''}</p>
+            ${adult_name ? `<p><strong>Adult:</strong> ${adult_name}${adult_name_2 ? `, ${adult_name_2}` : ''}</p>` : ''}
+            <p><strong>Email:</strong> ${email}</p>
+            ${message ? `<p><strong>Message:</strong> ${message}</p>` : ''}
+          </div>
+        `,
+      }),
+    });
 
     return c.json({ success: true, id: rsvp.id }, 200);
   });
