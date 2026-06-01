@@ -1,5 +1,5 @@
-import type { ValidationTargets } from "hono";
 import { HTTPException } from "hono/http-exception";
+import type { ValidationTargets } from "hono";
 import { validator } from "hono/validator";
 import type { z } from "zod";
 
@@ -21,7 +21,7 @@ export const zodValidator = <
 
     if (!result.success) {
       throw new HTTPException(400, {
-        message: "Invalid Request",
+        message: "Please fill out all required sections",
         cause: result.error,
       });
     }
