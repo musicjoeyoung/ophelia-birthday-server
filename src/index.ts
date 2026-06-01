@@ -257,9 +257,8 @@ const admin = new Hono<{ Bindings: AdminBindings }>()
               ${extra_text ? `<p style="color: #555; text-align: left; margin-bottom: 1rem; white-space: pre-line;">${extra_text}</p>` : ""}
               <img src="https://ophelia-birthday.com/flyer.jpg" alt="Ophelia's 5th Birthday Party Invitation" style="width: 100%; max-width: 520px; border-radius: 8px;" />
               <p style="margin-top: 1.5rem;">
-                <a href="https://ophelia-birthday.com" style="background: #c13b6c; color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 1rem; display: inline-block;">RSVP at ophelia-birthday.com</a>
+                <a href="https://ophelia-birthday.com" style="background: #c13b6c; color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 1rem; display: inline-block;">RSVP</a>
               </p>
-              <p style="margin-top: 1rem; font-size: 0.85rem; color: #aaa;">Can't make it? You can still let us know at the link above.</p>
             </div>
           `,
         }),
