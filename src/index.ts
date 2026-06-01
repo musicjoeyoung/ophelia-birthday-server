@@ -253,7 +253,7 @@ const admin = new Hono<{ Bindings: AdminBindings }>()
           subject: `${invitee.name}: You're invited to Ophelia's 5th Birthday Party! 🎉`,
           html: `
             <div style="font-family: sans-serif; max-width: 520px; margin: 0 auto; text-align: center; color: #333;">
-              <p style="font-size: 1.1rem; color: #555; text-align: left; margin-bottom: 0.75rem;">${invitee.name}: You're invited to Ophelia's 5th Birthday Party! 🎉</p>
+              <p style="font-family: 'Comic Sans MS', 'Nunito', sans-serif; font-size: 1.1rem; color: #555; text-align: center; margin-bottom: 0.75rem;">${invitee.name}: You're invited to Ophelia's 5th Birthday Party! 🎉</p>
               ${extra_text ? `<p style="color: #555; text-align: left; margin-bottom: 1rem; white-space: pre-line;">${extra_text}</p>` : ""}
               <img src="https://ophelia-birthday.com/flyer.jpg" alt="Ophelia's 5th Birthday Party Invitation" style="width: 100%; max-width: 520px; border-radius: 8px;" />
               <p style="margin-top: 1.5rem;">
@@ -308,7 +308,7 @@ const app = new Hono()
     "*",
     cors({
       origin: ["https://ophelia-birthday.com", "https://www.ophelia-birthday.com", "https://ophelia-birthday.netlify.app", "http://localhost:5173"],
-      allowMethods: ["GET", "POST", "PUT", "OPTIONS"],
+      allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
       allowHeaders: ["Content-Type", "Authorization"],
     }),
   )
