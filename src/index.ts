@@ -277,6 +277,22 @@ const admin = new Hono<{ Bindings: AdminBindings }>()
     await db.delete(schema.invitees).where(eq(schema.invitees.id, id));
     return c.json({ success: true });
   })
+  .patch("/invitees/:id", async (c) => {
+    const db = c.var.db;
+    const id = Number(c.req.param("id"));
+    const { name, email, notes } = await c.req.json<{ name?: string; email?: string | null; notes?: string | null }>();
+    const [updated] = await db
+      .update(schema.invitees)
+      .set({
+        ...(name !== undefined ? { name: name.trim() } : {}),
+        ...(email !== undefined ? { email: email?.trim() || null } : {}),
+        ...(notes !== undefined ? { notes: notes?.trim() || null } : {}),
+      })
+      .where(eq(schema.invitees.id, id))
+      .returning();
+    if (!updated) return c.json({ message: "Not found" }, 404);
+    return c.json(updated);
+  })
   .post("/send-invite", async (c) => {
     const db = c.var.db;
     const { ids, extra_text } = await c.req.json<{ ids: number[]; extra_text?: string }>();
