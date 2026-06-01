@@ -106,7 +106,7 @@ const api = new Hono()
         },
         body: JSON.stringify({
           from: "Ophelia's Birthday <rsvp@ophelia-birthday.com>",
-          to: "musicjoeyoung@gmail.com",
+          to: ["musicjoeyoung@gmail.com", "carlyanderson82@gmail.com"],
           subject: `New RSVP: ${attending ? '✅ YES' : '❌ NO'} — ${child_name}${child_name_2 ? ` & ${child_name_2}` : ''}`,
           html: `
             <div style="font-family: sans-serif; color: #333;">
@@ -217,7 +217,7 @@ const api = new Hono()
       },
       body: JSON.stringify({
         from: "Ophelia's Birthday <rsvp@ophelia-birthday.com>",
-        to: "musicjoeyoung@gmail.com",
+        to: ["musicjoeyoung@gmail.com", "carlyanderson82@gmail.com"],
         subject: `Updated RSVP: ${attending ? '✅ YES' : '❌ NO'} — ${child_name}${child_name_2 ? ` & ${child_name_2}` : ''}`,
         html: `
           <div style="font-family: sans-serif; color: #333;">
