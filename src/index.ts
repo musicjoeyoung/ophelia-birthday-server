@@ -62,9 +62,9 @@ const api = new Hono()
                 <table style="border-collapse: collapse; width: 100%;">
                   <tr><td style="white-space: nowrap; vertical-align: top; padding-right: 0.5em; padding-bottom: 0.4em;"><strong>🎂 What:</strong></td><td style="vertical-align: top; padding-bottom: 0.4em;">Ophelia's 5th Birthday Party!</td></tr>
                   <tr><td style="white-space: nowrap; vertical-align: top; padding-right: 0.5em; padding-bottom: 0.4em;"><strong>📍 Where:</strong></td><td style="vertical-align: top; padding-bottom: 0.4em;"><a href="https://maps.app.goo.gl/pDRcBvAxjHp5tsjV9">Little Pulp, 80-16 Cooper Avenue, Glendale, NY 11385</a></td></tr>
-                  <tr><td style="white-space: nowrap; vertical-align: top; padding-right: 0.5em;"><strong>🕚 When:</strong></td><td style="vertical-align: top;">Sunday, July 12th, 11:00am – 1:00pm</td></tr>
+                  <tr><td style="white-space: nowrap; vertical-align: top; padding-right: 0.5em; padding-bottom: 0.4em;"><strong>🕚 When:</strong></td><td style="vertical-align: top;">Sunday, July 12th, 11:00am – 1:00pm</td></tr>
+                  <tr><td style="white-space: nowrap; vertical-align: top; padding-right: 0.5em;"><strong>🌐 More:</strong></td><td style="vertical-align: top;">Please check the <a href="https://ophelia-birthday.com" style="color: #c13b6c;">website</a> for more party details.</td></tr>
                 </table>
-                <p style="text-align: center;">Please check the <a href="https://ophelia-birthday.com" style="color: #c13b6c;">website</a> for more party details.</p>
                 </div>
                 <p style="color: #555;">Can't wait to see you there!</p>
                 <p style="color: #c13b6c; font-weight: bold;">With love, Ophelia's family 💕</p>
@@ -174,9 +174,9 @@ const api = new Hono()
                 <table style="border-collapse: collapse; width: 100%;">
                   <tr><td style="white-space: nowrap; vertical-align: top; padding-right: 0.5em; padding-bottom: 0.4em;"><strong>🎂 What:</strong></td><td style="vertical-align: top; padding-bottom: 0.4em;">Ophelia's 5th Birthday Party!</td></tr>
                   <tr><td style="white-space: nowrap; vertical-align: top; padding-right: 0.5em; padding-bottom: 0.4em;"><strong>📍 Where:</strong></td><td style="vertical-align: top; padding-bottom: 0.4em;"><a href="https://maps.app.goo.gl/pDRcBvAxjHp5tsjV9">Little Pulp, 80-16 Cooper Avenue, Glendale, NY 11385</a></td></tr>
-                  <tr><td style="white-space: nowrap; vertical-align: top; padding-right: 0.5em;"><strong>🕚 When:</strong></td><td style="vertical-align: top;">Sunday, July 12th, 11:00am – 1:00pm</td></tr>
+                  <tr><td style="white-space: nowrap; vertical-align: top; padding-right: 0.5em; padding-bottom: 0.4em;"><strong>🕚 When:</strong></td><td style="vertical-align: top;">Sunday, July 12th, 11:00am – 1:00pm</td></tr>
+                  <tr><td style="white-space: nowrap; vertical-align: top; padding-right: 0.5em;"><strong>🌐 More:</strong></td><td style="vertical-align: top;">Please check the <a href="https://ophelia-birthday.com" style="color: #c13b6c;">website</a> for more party details.</td></tr>
                 </table>
-                <p style="text-align: center;">Please check the <a href="https://ophelia-birthday.com" style="color: #c13b6c;">website</a> for more party details.</p>
               </div>
               <p style="color: #555;">Can't wait to see you there!</p>
               <p style="color: #c13b6c; font-weight: bold;">With love, Ophelia's family 💕</p>
