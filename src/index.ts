@@ -369,7 +369,7 @@ const app = new Hono()
     "*",
     cors({
       origin: ["https://ophelia-birthday.com", "https://www.ophelia-birthday.com", "https://ophelia-birthday.netlify.app", "http://localhost:5173"],
-      allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+      allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
       allowHeaders: ["Content-Type", "Authorization"],
     }),
   )
