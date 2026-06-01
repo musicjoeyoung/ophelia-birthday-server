@@ -250,11 +250,12 @@ const admin = new Hono<{ Bindings: AdminBindings }>()
         body: JSON.stringify({
           from: "Ophelia's Birthday <rsvp@ophelia-birthday.com>",
           to: invitee.email,
-          subject: "You're invited to Ophelia's 5th Birthday Party! 🎉",
+          subject: `${invitee.name}: You're invited to Ophelia's 5th Birthday Party! 🎉`,
           html: `
             <div style="font-family: sans-serif; max-width: 520px; margin: 0 auto; text-align: center; color: #333;">
+              <p style="font-size: 1.1rem; color: #555; text-align: left; margin-bottom: 0.75rem;">${invitee.name}: You're invited to Ophelia's 5th Birthday Party! 🎉</p>
+              ${extra_text ? `<p style="color: #555; text-align: left; margin-bottom: 1rem; white-space: pre-line;">${extra_text}</p>` : ""}
               <img src="https://ophelia-birthday.com/flyer.jpg" alt="Ophelia's 5th Birthday Party Invitation" style="width: 100%; max-width: 520px; border-radius: 8px;" />
-              ${extra_text ? `<p style="color: #555; text-align: left; margin-top: 1.5rem; white-space: pre-line;">${extra_text}</p>` : ""}
               <p style="margin-top: 1.5rem;">
                 <a href="https://ophelia-birthday.com" style="background: #c13b6c; color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 1rem; display: inline-block;">RSVP at ophelia-birthday.com</a>
               </p>
