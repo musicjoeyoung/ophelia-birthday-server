@@ -10,6 +10,13 @@ import { cors } from "hono/cors";
 import { dbProvider } from "./middleware/dbProvider";
 import { zodValidator } from "./middleware/validator";
 
+function formatNames(raw: string): string {
+  const parts = raw.split(',').map((s) => s.trim()).filter(Boolean);
+  if (parts.length === 1) return parts[0];
+  if (parts.length === 2) return `${parts[0]} & ${parts[1]}`;
+  return `${parts.slice(0, -1).join(', ')}, & ${parts[parts.length - 1]}`;
+}
+
 // ── Public RSVP routes ────────────────────────────────────────────────────────
 const api = new Hono()
   .use("*", dbProvider)
@@ -312,10 +319,10 @@ const admin = new Hono<{ Bindings: AdminBindings }>()
         body: JSON.stringify({
           from: "Ophelia's Birthday <rsvp@ophelia-birthday.com>",
           to: invitee.email,
-          subject: `${invitee.name}: You're invited to Ophelia's 5th Birthday Party! 🎉`,
+          subject: `${formatNames(invitee.name)}: You're invited to Ophelia's 5th Birthday Party! 🎉`,
           html: `
             <div style="font-family: sans-serif; max-width: 520px; margin: 0 auto; text-align: center; color: #333;">
-              <p style="font-family: 'Comic Sans MS', 'Nunito', sans-serif; font-size: 1.1rem; color: #555; text-align: center; margin-bottom: 0.75rem;">${invitee.name}: You're invited to Ophelia's 5th Birthday Party! 🎉</p>
+              <p style="font-family: 'Comic Sans MS', 'Nunito', sans-serif; font-size: 1.1rem; color: #555; text-align: center; margin-bottom: 0.75rem;">${formatNames(invitee.name)}: You're invited to Ophelia's 5th Birthday Party! 🎉</p>
               ${extra_text ? `<p style="color: #555; text-align: left; margin-bottom: 1rem; white-space: pre-line;">${extra_text}</p>` : ""}
               <img src="https://ophelia-birthday.com/flyer.jpg" alt="Ophelia's 5th Birthday Party Invitation" style="width: 100%; max-width: 520px; border-radius: 8px;" />
               <p style="margin-top: 1.5rem;">
