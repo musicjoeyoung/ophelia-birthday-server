@@ -324,7 +324,7 @@ const admin = new Hono<{ Bindings: AdminBindings }>()
             <div style="font-family: sans-serif; max-width: 520px; margin: 0 auto; text-align: center; color: #333;">
               <p style="font-family: 'Comic Sans MS', 'Nunito', sans-serif; font-size: 1.1rem; color: #555; text-align: center; margin-bottom: 0.75rem;">${formatNames(invitee.name)}: You're invited to Ophelia's 5th Birthday Party! 🎉</p>
               ${extra_text ? `<p style="color: #555; text-align: left; margin-bottom: 1rem; white-space: pre-line;">${extra_text}</p>` : ""}
-              <img src="https://ophelia-birthday.com/flyer.jpg" alt="Ophelia's 5th Birthday Party Invitation" style="width: 100%; max-width: 520px; border-radius: 8px;" />
+              <img src="https://ophelia-birthday.com/flyer.jpg?v=2" alt="Ophelia's 5th Birthday Party Invitation" style="width: 100%; max-width: 520px; border-radius: 8px;" />
               <p style="margin-top: 1.5rem;">
                 <a href="https://ophelia-birthday.com" style="background: #c13b6c; color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 1rem; display: inline-block;">RSVP</a>
               </p>
