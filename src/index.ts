@@ -1,13 +1,13 @@
 import * as schema from "./db/schema";
 
 import { createFiberplane, createOpenAPISpec } from "@fiberplane/hono";
+import { eq, inArray, sql } from "drizzle-orm";
 
 import { HTTPException } from "hono/http-exception";
 import { Hono } from "hono";
 import { ZRsvpInsert } from "./dtos";
 import { cors } from "hono/cors";
 import { dbProvider } from "./middleware/dbProvider";
-import { sql } from "drizzle-orm";
 import { zodValidator } from "./middleware/validator";
 
 // ── Public RSVP routes ────────────────────────────────────────────────────────
@@ -209,6 +209,65 @@ const admin = new Hono<{ Bindings: AdminBindings }>()
       .from(schema.rsvps)
       .orderBy(schema.rsvps.createdAt);
     return c.json(rows);
+  })
+  .get("/invitees", async (c) => {
+    const db = c.var.db;
+    const rows = await db.select().from(schema.invitees).orderBy(schema.invitees.createdAt);
+    return c.json(rows);
+  })
+  .post("/invitees", async (c) => {
+    const db = c.var.db;
+    const { name, email, notes } = await c.req.json<{ name?: string; email?: string; notes?: string }>();
+    if (!name?.trim()) return c.json({ message: "name is required" }, 400);
+    const [invitee] = await db
+      .insert(schema.invitees)
+      .values({ name: name.trim(), email: email?.trim() || null, notes: notes?.trim() || null })
+      .returning();
+    return c.json(invitee, 201);
+  })
+  .delete("/invitees/:id", async (c) => {
+    const db = c.var.db;
+    const id = Number(c.req.param("id"));
+    await db.delete(schema.invitees).where(eq(schema.invitees.id, id));
+    return c.json({ success: true });
+  })
+  .post("/send-invite", async (c) => {
+    const db = c.var.db;
+    const { ids, extra_text } = await c.req.json<{ ids: number[]; extra_text?: string }>();
+    if (!ids?.length) return c.json({ message: "ids are required" }, 400);
+
+    const toSend = await db.select().from(schema.invitees).where(inArray(schema.invitees.id, ids));
+    const withEmail = toSend.filter((i) => i.email);
+
+    const results: { name: string; email: string; ok: boolean }[] = [];
+    for (const invitee of withEmail) {
+      const res = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${c.env.RESEND_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          from: "Ophelia's Birthday <rsvp@ophelia-birthday.com>",
+          to: invitee.email,
+          subject: "You're invited to Ophelia's 5th Birthday Party! 🎉",
+          html: `
+            <div style="font-family: sans-serif; max-width: 520px; margin: 0 auto; text-align: center; color: #333;">
+              <img src="https://ophelia-birthday.com/flyer.jpg" alt="Ophelia's 5th Birthday Party Invitation" style="width: 100%; max-width: 520px; border-radius: 8px;" />
+              ${extra_text ? `<p style="color: #555; text-align: left; margin-top: 1.5rem; white-space: pre-line;">${extra_text}</p>` : ""}
+              <p style="margin-top: 1.5rem;">
+                <a href="https://ophelia-birthday.com" style="background: #c13b6c; color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 1rem; display: inline-block;">RSVP at ophelia-birthday.com</a>
+              </p>
+              <p style="margin-top: 1rem; font-size: 0.85rem; color: #aaa;">Can't make it? You can still let us know at the link above.</p>
+            </div>
+          `,
+        }),
+      });
+      results.push({ name: invitee.name, email: invitee.email!, ok: res.ok });
+    }
+
+    const failed = results.filter((r) => !r.ok).map((r) => r.email);
+    return c.json({ sent: results.length - failed.length, failed, skipped: toSend.length - withEmail.length });
   })
   .post("/send-email", async (c) => {
     const { emails, subject, html } = await c.req.json<{

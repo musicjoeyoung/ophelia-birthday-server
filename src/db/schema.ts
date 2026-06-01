@@ -31,3 +31,14 @@ export const rsvps = pgTable(
   },
   (table) => [uniqueIndex("rsvpEmailUniqueIndex").on(lower(table.email))],
 );
+
+export type NewInvitee = typeof invitees.$inferInsert;
+export type Invitee = typeof invitees.$inferSelect;
+
+export const invitees = pgTable("invitees", {
+  id: serial().primaryKey(),
+  name: text().notNull(),
+  email: text(),
+  notes: text(),
+  createdAt: timestamp().defaultNow().notNull(),
+});
