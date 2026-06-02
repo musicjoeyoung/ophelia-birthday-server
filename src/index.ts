@@ -28,7 +28,7 @@ const api = new Hono()
       const [rsvp] = await db
         .insert(schema.rsvps)
         .values({
-          childName: child_name,
+          childName: child_name ?? '',
           childName2: child_name_2 ?? null,
           adultName: adult_name ?? '',
           adultName2: adult_name_2 ?? null,
@@ -57,7 +57,7 @@ const api = new Hono()
               <div style="font-family: sans-serif; max-width: 520px; margin: 0 auto; color: #c13b6c;">
                 <h1 style="font-size: 1.8rem; margin-bottom: 0.5rem;">You're coming! 🌈</h1>
                 <p style="font-size: 1.1rem; color: #555;">Hi ${greeting},</p>
-                <p style="color: #555;">We're so excited to celebrate Ophelia's 5th birthday with you${child_name_2 ? `, ${child_name}, & ${child_name_2}` : ` and ${child_name}`}!</p>
+                <p style="color: #555;">We're so excited to celebrate Ophelia's 5th birthday with you${child_name ? (child_name_2 ? `, ${child_name}, & ${child_name_2}` : ` and ${child_name}`) : ''}!</p>
                 <div style="background: #ecc8d0; border-radius: 12px; padding: 1rem 1.25rem; margin: 1.5rem 0; color: #333;">
                 <table style="border-collapse: collapse; width: 100%;">
                   <tr><td style="white-space: nowrap; vertical-align: top; padding-right: 0.5em; padding-bottom: 0.4em;"><strong>🎂 What:</strong></td><td style="vertical-align: top; padding-bottom: 0.4em;">Ophelia's 5th Birthday Party!</td></tr>
@@ -107,11 +107,11 @@ const api = new Hono()
         body: JSON.stringify({
           from: "Ophelia's Birthday <rsvp@ophelia-birthday.com>",
           to: ["musicjoeyoung@gmail.com", "carlyanderson82@gmail.com"],
-          subject: `New RSVP: ${attending ? '✅ YES' : '❌ NO'} — ${child_name}${child_name_2 ? ` & ${child_name_2}` : ''}`,
+          subject: `New RSVP: ${attending ? '✅ YES' : '❌ NO'} — ${child_name || adult_name || ''}`,
           html: `
             <div style="font-family: sans-serif; color: #333;">
               <p><strong>Status:</strong> ${attending ? '✅ Attending' : '❌ Not attending'}</p>
-              <p><strong>Child:</strong> ${child_name}${child_name_2 ? `, ${child_name_2}` : ''}</p>
+              ${child_name ? `<p><strong>Child:</strong> ${child_name}${child_name_2 ? `, ${child_name_2}` : ''}</p>` : '<p><strong>Children:</strong> None</p>'}
               ${adult_name ? `<p><strong>Adult:</strong> ${adult_name}${adult_name_2 ? `, ${adult_name_2}` : ''}</p>` : ''}
               <p><strong>Email:</strong> ${email}</p>
               ${message ? `<p><strong>Message:</strong> ${message}</p>` : ''}
@@ -136,7 +136,7 @@ const api = new Hono()
     const [rsvp] = await db
       .update(schema.rsvps)
       .set({
-        childName: child_name,
+        childName: child_name ?? '',
         childName2: child_name_2 ?? null,
         adultName: adult_name ?? '',
         adultName2: adult_name_2 ?? null,
@@ -169,7 +169,7 @@ const api = new Hono()
             <div style="font-family: sans-serif; max-width: 520px; margin: 0 auto; color: #c13b6c;">
               <h1 style="font-size: 1.8rem; margin-bottom: 0.5rem;">You're coming! 🌈</h1>
               <p style="font-size: 1.1rem; color: #555;">Hi ${greeting},</p>
-                <p style="color: #555;">We're so excited to celebrate Ophelia's 5th birthday with you${child_name_2 ? `, ${child_name}, & ${child_name_2}` : ` and ${child_name}`}!</p>
+                <p style="color: #555;">We're so excited to celebrate Ophelia's 5th birthday with you${child_name ? (child_name_2 ? `, ${child_name}, & ${child_name_2}` : ` and ${child_name}`) : ''}!</p>
               <div style="background: #ecc8d0; border-radius: 12px; padding: 1rem 1.25rem; margin: 1.5rem 0; color: #333;">
                 <table style="border-collapse: collapse; width: 100%;">
                   <tr><td style="white-space: nowrap; vertical-align: top; padding-right: 0.5em; padding-bottom: 0.4em;"><strong>🎂 What:</strong></td><td style="vertical-align: top; padding-bottom: 0.4em;">Ophelia's 5th Birthday Party!</td></tr>
@@ -218,11 +218,11 @@ const api = new Hono()
       body: JSON.stringify({
         from: "Ophelia's Birthday <rsvp@ophelia-birthday.com>",
         to: ["musicjoeyoung@gmail.com", "carlyanderson82@gmail.com"],
-        subject: `Updated RSVP: ${attending ? '✅ YES' : '❌ NO'} — ${child_name}${child_name_2 ? ` & ${child_name_2}` : ''}`,
+        subject: `Updated RSVP: ${attending ? '✅ YES' : '❌ NO'} — ${child_name || adult_name || ''}`,
         html: `
           <div style="font-family: sans-serif; color: #333;">
             <p><strong>Status:</strong> ${attending ? '✅ Attending' : '❌ Not attending'} (updated)</p>
-            <p><strong>Child:</strong> ${child_name}${child_name_2 ? `, ${child_name_2}` : ''}</p>
+            ${child_name ? `<p><strong>Child:</strong> ${child_name}${child_name_2 ? `, ${child_name_2}` : ''}</p>` : '<p><strong>Children:</strong> None</p>'}
             ${adult_name ? `<p><strong>Adult:</strong> ${adult_name}${adult_name_2 ? `, ${adult_name_2}` : ''}</p>` : ''}
             <p><strong>Email:</strong> ${email}</p>
             ${message ? `<p><strong>Message:</strong> ${message}</p>` : ''}

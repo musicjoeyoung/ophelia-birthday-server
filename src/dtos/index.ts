@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const ZRsvpInsert = z.object({
-  child_name: z.string().min(1, "Child name is required"),
+  child_name: z.string().optional(),
   child_name_2: z.string().optional(),
   adult_name: z.string().optional(),
   adult_name_2: z.string().optional(),
